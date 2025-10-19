@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesan Penting!</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            color: #34495e;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .button:hover {
+            background-color: #2980b9;
+        }
+        
+        .fly-text {
+            position: absolute;
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .cursor-effect {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-image: url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/dfe46ba0-a8c0-492d-ba2d-892791f05256.png');
+            background-size: contain;
+            pointer-events: none;
+            opacity: 0;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <h1>⚠️ PENTING! ⚠️</h1>
+        <p>Komputer Anda telah terdeteksi terkena virus! Klik tombol di bawah ini untuk memindai dan membersihkan sistem.</p>
+        <button class="button" id="actionButton">Pindai Sekarang</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('mainContainer');
+            const button = document.getElementById('actionButton');
+            let clickCount = 0;
+            const maxClicks = 5;
+            
+            // Efek saat kursor bergerak
+            document.addEventListener('mousemove', function(e) {
+                if (Math.random() > 0.95) {
+                    createCursorEffect(e.clientX, e.clientY);
+                }
+            });
+            
+            // Efek saat tombol diklik
+            button.addEventListener('click', function() {
+                clickCount++;
+                
+                // Efek gemetar
+                container.classList.add('shake');
+                setTimeout(() => {
+                    container.classList.remove('shake');
+                }, 500);
+                
+                // Teks terbang
+                createFlyingText();
+                
+                if (clickCount >= maxClicks) {
+                    // Prank selesai
+                    showCompletionMessage();
+                    button.disabled = true;
+                    button.textContent = 'Selesai!';
+                } else {
+                    // Ubah teks tombol
+                    const buttonTexts = [
+                        'Memindai...',
+                        'Masih memindai..',
+                        'sabar koncet!',
+                        'Hampir selesai...'
+                    ];
+                    button.textContent = buttonTexts[clickCount - 1] || 'Memproses...';
+                }
+            });
+            
+            // Membuat efek kursor
+            function createCursorEffect(x, y) {
+                const effect = document.createElement('div');
+                effect.className = 'cursor-effect';
+                effect.style.left = (x - 15) + 'px';
+                effect.style.top = (y - 15) + 'px';
+                effect.style.opacity = '1';
+                
+                document.body.appendChild(effect);
+                
+                // Animasi
+                let size = 30;
+                const grow = setInterval(() => {
+                    size += 2;
+                    effect.style.width = size + 'px';
+                    effect.style.height = size + 'px';
+                    effect.style.opacity = (1 - (size - 30) / 50).toString();
+                    
+                    if (size > 80) {
+                        clearInterval(grow);
+                        document.body.removeChild(effect);
+                    }
+                }, 20);
+            }
+            
+            // Membuat teks terbang
+            function createFlyingText() {
+                const texts = ['ERROR!', 'VIRUS!', 'WARNING!', 'ALERT!', 'OH NO!'];
+                const text = texts[Math.floor(Math.random() * texts.length)];
+                
+                const flyingText = document.createElement('div');
+                flyingText.className = 'fly-text';
+                flyingText.textContent = text;
+                flyingText.style.left = Math.random() * 80 + 10 + '%';
+                flyingText.style.top = Math.random() * 80 + 10 + '%';
+                flyingText.style.opacity = '1';
+                flyingText.style.transform = 'scale(1)';
+                
+                document.body.appendChild(flyingText);
+                
+                // Animasi
+                let scale = 1;
+                const growText = setInterval(() => {
+                    scale += 0.05;
+                    flyingText.style.transform = `scale(${scale})`;
+                    flyingText.style.opacity = (1 - (scale - 1) / 2).toString();
+                    
+                    if (scale > 3) {
+                        clearInterval(growText);
+                        document.body.removeChild(flyingText);
+                    }
+                }, 50);
+            }
+            
+            // Menampilkan pesan penyelesaian
+            function showCompletionMessage() {
+                container.innerHTML = `
+                    <h1>KONCET</h1>
+                    
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
